@@ -1,0 +1,22 @@
+<section class="card conta mx-auto border-0 shadow-sm rounded-4">
+  <div class="card-body p-4 p-md-5">
+    <h1 class="h2">Primeiro acesso</h1>
+    <p class="text-body-secondary">A configuração foi reservada para seu IP. Crie o administrador do bazar.</p>
+    <form method="post" data-primeiro-acesso>
+      <input type="hidden" name="csrf" value="{{csrf}}">
+      <div class="mb-3">
+        <label class="form-label" for="usuario">Nome de usuário</label>
+        <input class="form-control" id="usuario" name="usuario" required minlength="3" maxlength="60" autocomplete="username" pattern="[a-zA-Z0-9_.\-]{3,60}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="senha">Senha (12 a 72 bytes)</label>
+        <input class="form-control" id="senha" name="senha" type="password" required maxlength="72" autocomplete="new-password">
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="confirmacao">Confirme sua senha</label>
+        <input class="form-control" id="confirmacao" name="confirmacao" type="password" required maxlength="72" autocomplete="new-password">
+      </div>
+      <button class="btn btn-primary" type="submit">Criar administrador</button>
+    </form>
+  </div>
+</section>

@@ -10,7 +10,7 @@ header('Content-Type: text/html; charset=UTF-8');
 header('X-Content-Type-Options: nosniff');
 header('Referrer-Policy: same-origin');
 header('X-Frame-Options: DENY');
-header("Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
+header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'");
 header('Cache-Control: no-store');
 set_exception_handler(function (Throwable $e): void {
     error_log('Bazar: ' . $e->getMessage());
@@ -26,7 +26,6 @@ function ip(): string {
     return $ip;
 }
 function csrf(): string { return $_SESSION['csrf'] ??= bin2hex(random_bytes(32)); }
-function token(): void { echo '<input type="hidden" name="csrf" value="' . e(csrf()) . '">'; }
 function post(): void {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Allow: POST'); http_response_code(405); exit; }
     if (!is_string($_POST['csrf'] ?? null) || !hash_equals(csrf(), $_POST['csrf'])) { http_response_code(403); exit('Sua sessão expirou. Volte e atualize a página.'); }
@@ -34,9 +33,6 @@ function post(): void {
 function campo(string $nome): string { return is_string($_POST[$nome] ?? null) ? trim($_POST[$nome]) : ''; }
 function senha_campo(string $nome): string { return is_string($_POST[$nome] ?? null) ? $_POST[$nome] : ''; }
 function aviso(string $texto, string $tipo = 'erro'): void { $_SESSION['aviso'] = [$texto, $tipo]; }
-function mensagem(): void {
-    if (isset($_SESSION['aviso'])) { [$t,$tipo] = $_SESSION['aviso']; unset($_SESSION['aviso']); echo '<div role="status" class="aviso ' . e($tipo) . '">' . e($t) . '</div>'; }
-}
 function admin_existe(): bool { return (bool)banco()->query('SELECT id FROM administradores WHERE id=1')->fetchColumn(); }
 // INSERT IGNORE + chave única tornam a disputa pelo primeiro acesso atômica.
 function primeiro_acesso(): void {
@@ -48,6 +44,35 @@ function protegido(): void {
     if (empty($_SESSION['admin']) || time() - ($_SESSION['atividade'] ?? 0) > 1800) { unset($_SESSION['admin']); aviso('Entre para acessar o painel.'); ir('login.php'); }
     $_SESSION['atividade'] = time();
 }
-function topo(string $titulo): void { ?>
-<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title><?= e($titulo) ?> · Bazar Solidário</title><link rel="stylesheet" href="assets/style.css"></head><body><header class="cabecalho"><a class="marca" href="index.php"><span class="icone">♡</span><span>Bazar <strong>Solidário</strong><small>Juntos, fazemos a diferença</small></span></a><a class="restrito" href="<?= empty($_SESSION['admin']) ? 'login.php' : 'dashboard.php' ?>">Área do Administrador ↗</a></header><main><?php mensagem(); }
-function rodape(): void { ?></main><footer>Feito de pequenos gestos. Movido por grandes corações.<br><span>Bazar Solidário · Uma comunidade que cuida</span></footer></body></html><?php }
+// Os valores são escapados no ponto de origem. Fragmentos vêm de templates locais.
+function vista(string $nome, array $valores): string {
+    $template = file_get_contents(__DIR__ . '/views/' . $nome . '.html');
+    if ($template === false) {
+        throw new RuntimeException('Template indisponível.');
+    }
+
+    $substituicoes = [];
+    foreach ($valores as $chave => $valor) {
+        $substituicoes['{{' . $chave . '}}'] = $valor;
+    }
+    return strtr($template, $substituicoes);
+}
+
+function pagina(string $titulo, string $nome, array $valores = []): void {
+    $aviso = '';
+    if (isset($_SESSION['aviso'])) {
+        [$texto, $tipo] = $_SESSION['aviso'];
+        unset($_SESSION['aviso']);
+        $aviso = vista('aviso', [
+            'tipo' => $tipo === 'sucesso' ? 'success' : 'danger',
+            'texto' => e($texto),
+        ]);
+    }
+
+    echo vista('layout', [
+        'titulo' => e($titulo),
+        'area_admin' => empty($_SESSION['admin']) ? 'login.php' : 'dashboard.php',
+        'aviso' => $aviso,
+        'conteudo' => vista($nome, $valores + ['csrf' => e(csrf())]),
+    ]);
+}

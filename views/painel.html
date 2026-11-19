@@ -1,0 +1,55 @@
+<section class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+  <div>
+    <h1 class="h2">Olá, {{usuario}}.</h1>
+    <p class="mb-0 text-body-secondary">Acompanhe as participações do bazar.</p>
+  </div>
+  <form method="post" action="logout.php">
+    <input type="hidden" name="csrf" value="{{csrf}}">
+    <button class="btn btn-outline-primary" type="submit">Sair da conta</button>
+  </form>
+</section>
+
+<section class="row g-3 mb-4" aria-label="Resumo de participações">
+  <div class="col-sm"><div class="card card-body h-100">Participações <strong class="fs-3">{{total}}</strong></div></div>
+  <div class="col-sm"><div class="card card-body h-100">Doaram itens <strong class="fs-3">{{doaram}}</strong></div></div>
+  <div class="col-sm"><div class="card card-body h-100">Ainda não doaram <strong class="fs-3">{{nao_doaram}}</strong></div></div>
+</section>
+
+<div class="row g-3 mb-4">
+  <div class="col-md">
+    <section class="card card-body h-100">
+      <h2 class="h5">Média de idade por turma</h2>
+      <ul class="list-unstyled mb-0" id="idades">{{resumo_turmas}}</ul>
+    </section>
+  </div>
+  <div class="col-md">
+    <section class="card card-body h-100">
+      <h2 class="h5">Contribuições</h2>
+      <p class="mb-0">{{doaram}} doaram · {{nao_doaram}} ainda não doaram</p>
+      <ul class="list-unstyled mb-0 mt-2" id="doacoes" hidden></ul>
+    </section>
+  </div>
+</div>
+
+<section class="card card-body">
+  <h2 class="h5">Todas as participações</h2>
+  <div class="table-responsive" tabindex="0" role="region" aria-label="Cadastros do bazar">
+    <table class="table table-striped align-middle mb-0">
+      <caption>Dados dos participantes do bazar</caption>
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Nome</th>
+          <th scope="col">Idade</th>
+          <th scope="col">Turma</th>
+          <th scope="col">Doou?</th>
+          <th scope="col">Itens doados</th>
+          <th scope="col">Cadastro</th>
+        </tr>
+      </thead>
+      <tbody>{{participacoes}}</tbody>
+    </table>
+  </div>
+</section>
+
+<script id="dados-graficos" type="application/json">{{graficos}}</script>

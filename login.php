@@ -16,5 +16,4 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
  }
  aviso('Usuário ou senha incorretos.'); ir('login.php');
 }
-topo('Acesso restrito'); ?>
-<section class="cartao"><span class="etiqueta">ÁREA DO ADMINISTRADOR</span><h1>Bom ter você aqui.</h1><p>Entre para acompanhar as participações e o impacto do bazar.</p><form method="post"><?php token(); ?><div class="campo"><label for="usuario">Usuário</label><input id="usuario" name="usuario" required maxlength="60" autocomplete="username"></div><div class="campo"><label for="senha">Senha</label><input id="senha" name="senha" type="password" required maxlength="72" autocomplete="current-password"></div><button class="botao">Entrar no painel →</button></form><a class="voltar" href="index.php">← Voltar ao cadastro</a></section><?php rodape(); ?>
+pagina('Acesso restrito', 'login');

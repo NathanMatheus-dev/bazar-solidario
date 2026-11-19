@@ -1,0 +1,9 @@
+Options -Indexes
+DirectoryIndex index.php
+
+RewriteEngine On
+RewriteRule "(^|/)\." - [F]
+
+<FilesMatch "(?i)^(bootstrap\.php|conexao\.php|config\.(example|local)\.php|router\.php|license)$|\.(sql|md|html|py)$">
+    Require all denied
+</FilesMatch>

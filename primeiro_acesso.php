@@ -8,5 +8,4 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
  $q=banco()->prepare('INSERT IGNORE INTO administradores (id,usuario,senha_hash) VALUES (1,?,?)'); $q->execute([$usuario,password_hash($senha,PASSWORD_DEFAULT)]);
  aviso($q->rowCount() ? 'Administrador criado. Entre com suas credenciais.' : 'O administrador já foi configurado.', 'sucesso'); ir('login.php');
 }
-topo('Primeiro acesso'); ?>
-<section class="cartao"><span class="etiqueta">BEM-VINDO AO BAZAR</span><h1>Um começo seguro</h1><p>Este primeiro acesso reservou a configuração para o seu IP. Crie o único administrador do sistema.</p><form method="post"><?php token(); ?><div class="campo"><label for="usuario">Nome de usuário</label><input id="usuario" name="usuario" required minlength="3" maxlength="60" autocomplete="username" pattern="[a-zA-Z0-9_.-]{3,60}"></div><div class="campo"><label for="senha">Senha (12 a 72 bytes)</label><input id="senha" name="senha" type="password" required minlength="12" maxlength="72" autocomplete="new-password"></div><div class="campo"><label for="confirmacao">Confirme sua senha</label><input id="confirmacao" name="confirmacao" type="password" required minlength="12" maxlength="72" autocomplete="new-password"></div><button class="botao">Criar administrador →</button></form></section><?php rodape(); ?>
+pagina('Primeiro acesso', 'primeiro-acesso');

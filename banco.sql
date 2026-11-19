@@ -1,3 +1,4 @@
+-- Importe este arquivo no phpMyAdmin para criar o banco e as quatro tabelas.
 CREATE DATABASE IF NOT EXISTS bazar_solidario CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE bazar_solidario;
 CREATE TABLE IF NOT EXISTS configuracao (

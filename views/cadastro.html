@@ -1,0 +1,46 @@
+<section class="hero rounded-4 p-4 p-md-5 mb-4">
+  <h1 class="display-5 fw-bold">O que sobra para você<br>pode ser um novo começo.</h1>
+  <p class="lead mb-0">Uma roupa, um livro, um gesto de carinho. Participe do nosso bazar e ajude a comunidade.</p>
+</section>
+
+<section class="card shadow-sm border-0 rounded-4">
+  <div class="card-body p-4 p-md-5">
+    <h2 class="h3">Registre sua participação</h2>
+    <p class="text-body-secondary">Mesmo que não possa doar agora, seu cadastro é bem-vindo.</p>
+    <form action="processa_cadastro.php" method="post" data-cadastro>
+      <input type="hidden" name="csrf" value="{{csrf}}">
+      <div class="mb-3">
+        <label class="form-label" for="nome">Nome completo</label>
+        <input class="form-control" id="nome" name="nome" minlength="2" maxlength="120" autocomplete="name" value="{{nome}}" required>
+      </div>
+      <div class="row g-3 mb-3">
+        <div class="col-sm">
+          <label class="form-label" for="idade">Idade</label>
+          <input class="form-control" type="number" id="idade" name="idade" min="1" max="120" value="{{idade}}" required>
+        </div>
+        <div class="col-sm">
+          <label class="form-label" for="serie">Série / turma</label>
+          <input class="form-control" id="serie" name="serie" maxlength="20" placeholder="Ex.: 3°D" value="{{serie}}" required>
+        </div>
+      </div>
+      <fieldset class="mb-3">
+        <legend class="fs-6">Você doou ou vai doar algum item?</legend>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" id="doou-sim" name="doou" value="1" {{sim}} required>
+          <label class="form-check-label" for="doou-sim">Sim, quero contribuir</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" id="doou-nao" name="doou" value="0" {{nao}}>
+          <label class="form-check-label" for="doou-nao">Ainda não</label>
+        </div>
+      </fieldset>
+      <div class="mb-3" data-itens>
+        <label class="form-label" for="itens">Itens doados</label>
+        <textarea class="form-control" id="itens" name="itens_doados" rows="4" minlength="2" maxlength="3000" aria-describedby="itens-ajuda">{{itens}}</textarea>
+        <div class="form-text" id="itens-ajuda">Obrigatório se marcou sim.</div>
+      </div>
+      <p class="small text-body-secondary">Seus dados serão usados para organizar o bazar e estarão disponíveis apenas à administração.</p>
+      <button class="btn btn-primary" type="submit">Registrar participação</button>
+    </form>
+  </div>
+</section>
