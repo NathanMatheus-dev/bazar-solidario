@@ -34,9 +34,9 @@ function campo(string $nome): string { return is_string($_POST[$nome] ?? null) ?
 function senha_campo(string $nome): string { return is_string($_POST[$nome] ?? null) ? $_POST[$nome] : ''; }
 function aviso(string $texto, string $tipo = 'erro'): void { $_SESSION['aviso'] = [$texto, $tipo]; }
 function admin_existe(): bool { return (bool)banco()->query('SELECT id FROM administradores WHERE id=1')->fetchColumn(); }
-// INSERT IGNORE + chave única tornam a disputa pelo primeiro acesso atômica.
+// INSERT com tratamento de conflito e chave única tornam a disputa pelo primeiro acesso atômica.
 function primeiro_acesso(): void {
-    $q = banco()->prepare('INSERT IGNORE INTO configuracao (id, primeiro_ip) VALUES (1, ?)'); $q->execute([ip()]);
+    $q = banco()->prepare('INSERT INTO configuracao (id, primeiro_ip) VALUES (1, ?) ON CONFLICT(id) DO NOTHING'); $q->execute([ip()]);
     if (!admin_existe() && dono_setup()) ir('primeiro_acesso.php');
 }
 function dono_setup(): bool { return banco()->query('SELECT primeiro_ip FROM configuracao WHERE id=1')->fetchColumn() === ip(); }

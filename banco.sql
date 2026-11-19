@@ -1,31 +1,34 @@
--- Importe este arquivo no phpMyAdmin para criar o banco e as quatro tabelas.
-CREATE DATABASE IF NOT EXISTS bazar_solidario CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE bazar_solidario;
+-- Schema do SQLite, aplicado automaticamente no primeiro acesso.
+BEGIN IMMEDIATE;
+
 CREATE TABLE IF NOT EXISTS configuracao (
- id TINYINT UNSIGNED PRIMARY KEY,
- primeiro_ip VARCHAR(45) NOT NULL,
- criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
- CONSTRAINT unica_config CHECK (id = 1)
-) ENGINE=InnoDB;
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    primeiro_ip TEXT NOT NULL,
+    criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS administradores (
- id TINYINT UNSIGNED PRIMARY KEY,
- usuario VARCHAR(60) NOT NULL UNIQUE,
- senha_hash VARCHAR(255) NOT NULL,
- criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
- CONSTRAINT unico_admin CHECK (id = 1)
-) ENGINE=InnoDB;
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    usuario TEXT NOT NULL COLLATE NOCASE UNIQUE,
+    senha_hash TEXT NOT NULL,
+    criado_em TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS doadores (
- id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
- nome VARCHAR(120) NOT NULL,
- idade TINYINT UNSIGNED NOT NULL,
- itens_doados TEXT NOT NULL,
- serie VARCHAR(20) NOT NULL,
- doou BOOLEAN NOT NULL,
- data_cadastro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
- CONSTRAINT idade_valida CHECK (idade BETWEEN 1 AND 120)
-) ENGINE=InnoDB;
+    id INTEGER PRIMARY KEY,
+    nome TEXT NOT NULL,
+    idade INTEGER NOT NULL CHECK (idade BETWEEN 1 AND 120),
+    itens_doados TEXT NOT NULL,
+    serie TEXT NOT NULL COLLATE NOCASE,
+    doou INTEGER NOT NULL CHECK (doou IN (0, 1)),
+    data_cadastro TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS tentativas_login (
- ip VARCHAR(45) PRIMARY KEY,
- tentativas INT UNSIGNED NOT NULL DEFAULT 0,
- janela_inicio DATETIME NOT NULL
-) ENGINE=InnoDB;
+    ip TEXT PRIMARY KEY NOT NULL,
+    tentativas INTEGER NOT NULL DEFAULT 0 CHECK (tentativas >= 0),
+    janela_inicio INTEGER NOT NULL
+);
+
+PRAGMA user_version = 1;
+COMMIT;

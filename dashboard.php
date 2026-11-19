@@ -19,7 +19,7 @@ foreach ($linhas as $linha) {
         'serie' => e($linha['serie']),
         'doou' => $linha['doou'] ? 'Sim' : 'Ainda não',
         'itens' => e($linha['itens_doados'] === '' ? '—' : $linha['itens_doados']),
-        'data' => date('d/m/Y H:i', strtotime($linha['data_cadastro'])),
+        'data' => date('d/m/Y H:i', strtotime($linha['data_cadastro'] . ' UTC')),
     ]);
 }
 
